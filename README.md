@@ -1,4 +1,4 @@
-NfcLib
+﻿NfcLib
 ======
 
 FeliCa(NfcF) and Mifare(Classic/Ultralight) access library for C#(Sony PaSoRi)
