@@ -167,40 +167,10 @@ namespace com.esp.falplib
         /// <returns>T:成功 F:失敗</returns>
         public static bool WriteBlockData(int svCode, byte[] idm, int[] block, byte[] buffer, int offset, int length)
         {
-            HandleContainer hc = new HandleContainer();
-            try{
-                //サービスコード(サービスコードはリトルエンディアン)
-                byte[] svcBuffer = BitConverter.GetBytes((ushort)svCode);
-
-                //ブロックリスト
-                byte[] blBuffer = makeBlockList(block);
-
-                //ブロックデータ
-                byte[] bdBuffer = new byte[block.Length * BLOCK_LENGTH];
-                Array.Copy(buffer, offset, bdBuffer, 0, length);
-
-                //書込み情報構造体
-                InputStructureWriteBlockWithoutEncryption isWB
-                        = new InputStructureWriteBlockWithoutEncryption();
-                isWB.CardIdm = hc.AddPinnedObject(idm).AddrOfPinnedObject();
-                isWB.NumberOfServices = 1;
-                isWB.ServiceCodeList = hc.AddPinnedObject(svcBuffer).AddrOfPinnedObject();
-                isWB.NumberOfBlocks = (byte)block.Length;
-                isWB.BlockList = hc.AddPinnedObject(blBuffer).AddrOfPinnedObject();
-                isWB.BlockData = hc.AddPinnedObject(bdBuffer).AddrOfPinnedObject();
-
-                //書き込み結果構造体
-                byte flag1=0, flag2=0;
-                OutputStructureWriteBlockWithoutEncryption osWB 
-                        = new OutputStructureWriteBlockWithoutEncryption();
-                osWB.StatusFlag1 = hc.AddPinnedObject(flag1).AddrOfPinnedObject();
-                osWB.StatusFlag2 = hc.AddPinnedObject(flag2).AddrOfPinnedObject();
-
-                //書込み
-                return felica_dll.WriteBlockWithoutEncryption(ref isWB, ref osWB);
-            }finally{
-                hc.FreeHandle();
-            }
+            //"write without encryption"s source code is protected by SONY NDA
+            //binary libray support this command
+            //書き込みコマンドのソースコードは、NDA規約により開示不可となっています
+            return false;
         }
 #endif
 
@@ -217,54 +187,11 @@ namespace com.esp.falplib
         /// <returns>T:成功 F:失敗</returns>
         public static bool ReadBlockData(int svCode, byte[] idm, int[] block, byte[] buffer, int offset, out int readCount)
         {
-            HandleContainer hc = new HandleContainer();
+            //"read without encryption"s source code is protected by SONY NDA
+            //binary libray support this command
+            //読み込みコマンドのソースコードは、NDA規約により開示不可となっています
             readCount = 0;
-            try
-            {
-                //サービスコード
-                byte[] svcBuffer = BitConverter.GetBytes((ushort)svCode);
-
-                //ブロックリスト
-                byte[] blBuffer = makeBlockList(block);
-
-                //読込み情報構造体
-                InputStructureReadBlockWithoutEncryption isRB
-                    = new InputStructureReadBlockWithoutEncryption();
-                isRB.CardIdm = hc.AddPinnedObject(idm).AddrOfPinnedObject();
-                isRB.NumberOfServices = 1;
-                isRB.ServiceCodeList = hc.AddPinnedObject(svcBuffer).AddrOfPinnedObject();
-                isRB.NumberOfBlocks = (byte)block.Length;
-                isRB.BlockList = hc.AddPinnedObject(blBuffer).AddrOfPinnedObject();
-
-                //書き込み結果構造体
-                byte flag1 = 0, flag2 = 0;
-                byte[] res = new byte[1]{0x00};
-                //ブロックデータ
-                byte[] bdBuffer = new byte[block.Length * BLOCK_LENGTH];
-
-                OutputStructureReadBlockWithoutEncryption osRB
-                        = new OutputStructureReadBlockWithoutEncryption();
-                osRB.StatusFlag1 = hc.AddPinnedObject(flag1).AddrOfPinnedObject();
-                osRB.StatusFlag2 = hc.AddPinnedObject(flag2).AddrOfPinnedObject();
-                osRB.ResultNumberOfBlocks = hc.AddPinnedObject(res).AddrOfPinnedObject();
-                osRB.BlockData = hc.AddPinnedObject(bdBuffer).AddrOfPinnedObject();
- 
-                if (felica_dll.ReadBlockWithoutEncryption(ref isRB, ref osRB))
-                {
-                    //ブロックの読込みに失敗
-                    if (0 == res[0]) return false;
-
-                    //読み取ったByte数
-                    readCount = res[0] * BLOCK_LENGTH;
-                    Array.Copy(bdBuffer, 0, buffer, offset, readCount);
-                    return true;
-                }
-                return false;
-            }
-            finally
-            {
-                hc.FreeHandle();
-            }
+            return false;
         }
 #endif
         /// <summary>
