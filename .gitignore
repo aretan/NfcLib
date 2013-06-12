@@ -1,1 +1,7 @@
 /**/obj
+/**/bin
+*.dll
+*.xml
+*.exe
+*.pdb
+*.config
