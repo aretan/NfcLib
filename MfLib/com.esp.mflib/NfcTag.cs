@@ -148,6 +148,33 @@ namespace com.esp.nfclib.card
     }
 
     /// <summary>
+    /// NTAG203
+    /// </summary>
+    public class NTAG203 : Mifare
+    {
+        /// <summary>
+        /// NfcLibを指定して生成
+        /// </summary>
+        /// <param name="lib">NfcLib</param>
+        /// <param name="uid">UID</param>
+        public NTAG203(NfcLib lib, byte[] uid)
+            : base(lib, uid)
+        {
+        }
+
+        /// <summary>
+        /// データブロックへの書き込み
+        /// </summary>
+        /// <param name="page">ページ番号</param>
+        /// <param name="buffer">データバッファ[4Byte]</param>
+        /// <param name="offset">バッファ内の開始位置</param>
+        public override void Write(byte page, byte[] buffer, int offset)
+        {
+            lib.WritePageData(page, buffer, offset);
+        }
+    }
+
+    /// <summary>
     /// Felica
     /// </summary>
     public class Felica : NfcTag

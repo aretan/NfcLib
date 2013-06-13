@@ -142,7 +142,7 @@ namespace com.esp.nfclib
             DisposeLibrary();
         }
 
-                /// <summary>
+        /// <summary>
         /// ポーリング
         /// </summary>
         /// <returns>カード情報,NULL=未検出</returns>
@@ -234,6 +234,10 @@ namespace com.esp.nfclib
             else if (atr[13] == 0x00 && atr[14] == 0x3b)
             {
                 return new Felica(lib, uid);
+            }
+            else if (atr[13] == 0x00 && atr[14] == 0x3a)
+            {
+                return new NTAG203(lib, uid);
             }
             return null;
         }
